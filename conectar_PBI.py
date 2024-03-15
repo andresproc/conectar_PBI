@@ -4,12 +4,13 @@ import env
 from sys import path
 from pyadomd import Pyadomd
 
-
+#Definimos el servidor local de SSAS
 port_number='localhost:65373'
 
+#Cadena de Conexion
 conn_str = f'Provider=MSOLAP;Persist Security Info=True;Data Source={port_number};Catalog={env.model_name};'
 
-
+#Creamos nuestra sentencia DAX que vamos almacenar en un DF
 dax_query="""
 // DAX Query
 DEFINE
@@ -44,10 +45,12 @@ ORDER BY
 
 """
  
+ #Ejecutamos la conexion 
 con = Pyadomd(conn_str)
 
 con.open()
 
+#Enviamos la consuta de analitica y convertimos el cursor en un DF
 result = con.cursor().execute(dax_query)
 df = pd.DataFrame(result.fetchone())
 
@@ -55,4 +58,5 @@ df = pd.DataFrame(result.fetchone())
 print(df)
 
 
+#Cerramos la conexion 
 con.close()
